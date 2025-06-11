@@ -4,6 +4,7 @@ import './App.css';
 
 // ASCII art frames for animation
 const CAT_FRAMES = [
+   // Normal open-eye frame
    `
       /\\_/\\
      / o o \\           _ 
@@ -15,6 +16,7 @@ const CAT_FRAMES = [
     | |  | |     | | | |
     |_|  |_|     |_| |_|
     `,
+   // Blink frame
    `
       /\\_/\\
      / > < \\           _ 
@@ -26,7 +28,7 @@ const CAT_FRAMES = [
     | |  | |     | | | |
     |_|  |_|     |_| |_|
   `,
-   // New frame for dead cat (X eyes)
+   // Dead cat (X eyes)
    `
       /\\_/\\
      / X X \\           _ 
@@ -38,6 +40,30 @@ const CAT_FRAMES = [
     | |  | |     | | | |
     |_|  |_|     |_| |_|
   `,
+   // Dance frame 1 (head right)
+   `
+        /\\_/\\
+       / u u \\           _ 
+     >( \\_Y_/ )<        | |
+       =====           / /
+     /   o  \\_________/ /
+     |                  |
+     |  /\\   _____      |
+     | |  |_|     |_| | |
+     |_|              |_|
+   `,
+   // Dance frame 2 (head left)
+   `
+     /\\_/\\
+    / u u \\           _ 
+  >( \\_Y_/ )<        | |
+     =====           / /
+   /   o  \\_________/ /
+   |                  |
+   |  /\\   _____      |
+   |_|  | |     | | |_|
+        |_|     |_|    
+   `,
 ];
 
 const MAX_BAR_LENGTH = 20; // Both bars same length
@@ -45,6 +71,7 @@ const MAX_HUNGER = MAX_BAR_LENGTH;
 const MAX_HAPPINESS = MAX_BAR_LENGTH;
 const HUNGER_DECREASE_INTERVAL = 4000; // ms
 const HAPPINESS_DECREASE_INTERVAL = 3000; // ms (faster than hunger)
+const DANCE_FRAMES = [3, 4]; // Indexes of dance frames in CAT_FRAMES
 
 function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
@@ -58,37 +85,50 @@ function App() {
   const [isBlinking, setIsBlinking] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [message, setMessage] = useState('');
+  const [isDancing, setIsDancing] = useState(false);
   const inputRef = useRef(null);
+  const danceIntervalRef = useRef(null);
 
-  // Animate cat with random blink timing
+  // Animate cat with random blink timing or dance
   useEffect(() => {
     if (gameOver) return;
-    let blinkTimeout;
-    let blinkInterval;
+    if (isDancing) {
+      // Dance animation: flip between two frames every 500ms
+      let danceIdx = 0;
+      setCatFrame(DANCE_FRAMES[danceIdx]);
+      danceIntervalRef.current = setInterval(() => {
+        danceIdx = 1 - danceIdx;
+        setCatFrame(DANCE_FRAMES[danceIdx]);
+      }, 500);
+      return () => clearInterval(danceIntervalRef.current);
+    } else {
+      let blinkTimeout;
+      let blinkInterval;
 
-    function scheduleBlink() {
-      // Hold open-eye frame for 2-5 seconds randomly
-      blinkTimeout = setTimeout(() => {
-        setIsBlinking(true);
-        setCatFrame(1); // blink frame
-        // Blink lasts 0.5s
-        blinkInterval = setTimeout(() => {
-          setIsBlinking(false);
-          setCatFrame(0); // open-eye frame
-          scheduleBlink();
-        }, 200);
-      }, 1000 + Math.random() * 2000);
+      function scheduleBlink() {
+        // Hold open-eye frame for 2-5 seconds randomly
+        blinkTimeout = setTimeout(() => {
+          setIsBlinking(true);
+          setCatFrame(1); // blink frame
+          // Blink lasts 0.5s
+          blinkInterval = setTimeout(() => {
+            setIsBlinking(false);
+            setCatFrame(0); // open-eye frame
+            scheduleBlink();
+          }, 200);
+        }, 1000 + Math.random() * 2000);
+      }
+
+      setCatFrame(0);
+      setIsBlinking(false);
+      scheduleBlink();
+
+      return () => {
+        clearTimeout(blinkTimeout);
+        clearTimeout(blinkInterval);
+      };
     }
-
-    setCatFrame(0);
-    setIsBlinking(false);
-    scheduleBlink();
-
-    return () => {
-      clearTimeout(blinkTimeout);
-      clearTimeout(blinkInterval);
-    };
-  }, [gameOver]);
+  }, [gameOver, isDancing]);
 
   // Decrease hunger
   useEffect(() => {
@@ -127,18 +167,25 @@ function App() {
     inputRef.current?.focus();
   }, [gameOver]);
 
+  // Stop dance on any command
   const handleCommand = (e) => {
     e.preventDefault();
     if (gameOver) return;
     const cmd = input.trim().toLowerCase();
+    setIsDancing(false); // Stop dance on any command
     if (cmd === 'feed') {
       setHunger(h => clamp(h + 5, 0, MAX_HUNGER));
       setMessage('You fed your cat.');
     } else if (cmd === 'pet') {
       setHappiness(h => clamp(h + 3, 0, MAX_HAPPINESS));
       setMessage('You pet your cat.');
+    } else if (cmd === 'dance') {
+      setHappiness(MAX_HAPPINESS);
+      setHunger(h => clamp(h - 3, 0, MAX_HUNGER));
+      setIsDancing(true);
+      setMessage('Your cat is dancing!');
     } else if (cmd) {
-      setMessage('Unknown command. Try "feed" or "pet".');
+      setMessage('Unknown command. Try "feed", "pet", or "dance".');
     }
     setInput('');
   };
@@ -209,7 +256,7 @@ function App() {
                 />
               </form>
             )}
-            <div className="commands">Commands: &lt;feed&gt; &lt;pet&gt;</div>
+            <div className="commands">Commands: &lt;feed&gt; &lt;pet&gt; &lt;dance&gt;</div>
           </div>
         </div>
       </div>
