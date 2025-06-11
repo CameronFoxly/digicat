@@ -43,17 +43,39 @@ function App() {
   const [happiness, setHappiness] = useState(MAX_HAPPINESS);
   const [input, setInput] = useState('');
   const [catFrame, setCatFrame] = useState(0);
+  const [isBlinking, setIsBlinking] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [message, setMessage] = useState('');
   const inputRef = useRef(null);
 
-  // Animate cat
+  // Animate cat with random blink timing
   useEffect(() => {
     if (gameOver) return;
-    const anim = setInterval(() => {
-      setCatFrame(f => (f + 1) % CAT_FRAMES.length);
-    }, 500);
-    return () => clearInterval(anim);
+    let blinkTimeout;
+    let blinkInterval;
+
+    function scheduleBlink() {
+      // Hold open-eye frame for 2-5 seconds randomly
+      blinkTimeout = setTimeout(() => {
+        setIsBlinking(true);
+        setCatFrame(1); // blink frame
+        // Blink lasts 0.5s
+        blinkInterval = setTimeout(() => {
+          setIsBlinking(false);
+          setCatFrame(0); // open-eye frame
+          scheduleBlink();
+        }, 500);
+      }, 2000 + Math.random() * 3000);
+    }
+
+    setCatFrame(0);
+    setIsBlinking(false);
+    scheduleBlink();
+
+    return () => {
+      clearTimeout(blinkTimeout);
+      clearTimeout(blinkInterval);
+    };
   }, [gameOver]);
 
   // Decrease hunger
