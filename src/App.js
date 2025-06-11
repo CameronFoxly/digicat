@@ -7,7 +7,7 @@ const CAT_FRAMES = [
    `
       /\\_/\\
      / o o \\           _ 
-   >( =_Y_= )<        | |
+   >( \\_Y_/ )<        | |
       =====           / /
     /   o  \\_________/ /
     |                  |
@@ -18,7 +18,7 @@ const CAT_FRAMES = [
    `
       /\\_/\\
      / > < \\           _ 
-   >( =_Y_= )<        | |
+   >( \\_Y_/ )<        | |
       =====           / /
     /   o  \\_________/ /
     |                  |
@@ -85,7 +85,7 @@ function App() {
       setHunger(h => {
         if (h <= 1) {
           setGameOver(true);
-          setMessage('Your cat starved!');
+          setMessage('Your cat starved! It is dead.');
           return 0;
         }
         return h - 1;
@@ -179,7 +179,7 @@ function App() {
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '70px' }}>
               <div style={{ visibility: gameOver ? 'visible' : 'hidden', height: gameOver ? 'auto' : 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <div className="game-over">Game Over</div>
-                <button style={{ marginTop: 8 }} onClick={handleRestart}>Restart</button>
+                <button className="game-over-btn" onClick={handleRestart}>Restart</button>
               </div>
             </div>
           </div>

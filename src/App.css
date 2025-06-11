@@ -173,25 +173,38 @@
   text-align: center;
 }
 .game-over {
-  color: #ff6b6b;
-  font-weight: bold;
-  margin: 18px 0 10px 0;
+  color: #f7d774;
+  background: none;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: normal;
   text-align: center;
-  font-size: 1.15rem;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  letter-spacing: 1px;
+  white-space: pre;
 }
-.game-over button {
-  margin-top: 10px;
+.game-over-btn {
+  margin-top: 8px;
+  background: #22242a;
+  color: #b6e3ff;
+  border: 1px solid #4976f7;
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 2px 18px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  box-shadow: none;
+  outline: none;
+  letter-spacing: 1px;
+}
+.game-over-btn:hover, .game-over-btn:focus {
   background: #4976f7;
   color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 22px;
-  font-size: 1.08rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.game-over button:hover {
-  background: #3556b3;
+  border: 1px solid #b6e3ff;
 }
 
 /* Extra tweaks for pixel-perfect look */
