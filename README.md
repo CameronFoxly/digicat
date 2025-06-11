@@ -1,3 +1,38 @@
+# DIGI-CAT
+
+DIGI-CAT is a virtual pet terminal game built with React. Keep your ASCII cat alive by feeding and petting it! The cat's hunger and happiness decrease over time. If either reaches zero, the cat dies and its eyes turn to X's.
+
+## Features
+- Animated ASCII art cat that blinks
+- Hunger and happiness stats displayed as bars
+- Type commands (`feed`, `pet`) to interact with your cat
+- If hunger or happiness reaches zero, the cat dies (X eyes) and you see a game over message
+- Restart button to play again
+- Simple terminal-style UI
+
+## Commands
+- `feed` — Increases hunger
+- `pet` — Increases happiness
+
+## How to Play
+1. Start the app with `npm start` and open [http://localhost:3000](http://localhost:3000)
+2. Watch your cat and keep an eye on its stats
+3. Type `feed` or `pet` in the command input to care for your cat
+4. If you neglect your cat, it will die and its eyes will become X's
+5. Click "Restart" to try again
+
+## Development
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+### Available Scripts
+- `npm start` — Run the app in development mode
+- `npm test` — Run tests
+- `npm run build` — Build for production
+
+See the original Create React App README below for more details.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

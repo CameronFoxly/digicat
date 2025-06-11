@@ -26,13 +26,25 @@ const CAT_FRAMES = [
     | |  | |     | | | |
     |_|  |_|     |_| |_|
   `,
+   // New frame for dead cat (X eyes)
+   `
+      /\\_/\\
+     / X X \\           _ 
+   >(  _Y_  )<        | |
+      =====           / /
+    /   o  \\_________/ /
+    |                  |
+    |  /\\   _____      |
+    | |  | |     | | | |
+    |_|  |_|     |_| |_|
+  `,
 ];
 
 const MAX_BAR_LENGTH = 20; // Both bars same length
 const MAX_HUNGER = MAX_BAR_LENGTH;
 const MAX_HAPPINESS = MAX_BAR_LENGTH;
-const HUNGER_DECREASE_INTERVAL = 400; // ms
-const HAPPINESS_DECREASE_INTERVAL = 300; // ms (faster than hunger)
+const HUNGER_DECREASE_INTERVAL = 4000; // ms
+const HAPPINESS_DECREASE_INTERVAL = 3000; // ms (faster than hunger)
 
 function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
@@ -170,7 +182,7 @@ function App() {
             {renderBar('Happiness', happiness, MAX_HAPPINESS)}
           </div>
           <div className="cat-art-wrapper">
-            <pre className="cat-art">{CAT_FRAMES[catFrame]}</pre>
+            <pre className="cat-art">{gameOver ? CAT_FRAMES[2] : CAT_FRAMES[catFrame]}</pre>
           </div>
           <div className="message" style={{ minHeight: '1.5em', visibility: message ? 'visible' : 'hidden' }}>
             {message || ' '}
