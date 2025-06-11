@@ -1,6 +1,6 @@
-# DIGI-CAT
+# DigiCat
 
-DIGI-CAT is a virtual pet terminal game built with React. Keep your ASCII cat alive by feeding and petting it! The cat's hunger and happiness decrease over time. If either reaches zero, the cat dies and its eyes turn to X's.
+DigiCat is a virtual pet terminal game built with React. Keep your ASCII cat alive by feeding and petting it! The cat's hunger and happiness decrease over time. If either reaches zero, the cat dies and its eyes turn to X's.
 
 ![Screenshot 2025-06-11 at 4 06 13 PM](https://github.com/user-attachments/assets/2c459413-8c38-4648-9f0a-2a6abd83002d)
 
