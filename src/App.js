@@ -1,23 +1,166 @@
+import React, { useState, useEffect, useRef } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+// ASCII art frames for animation
+const CAT_FRAMES = [
+  ` /\_/\
+   / o o \
+  ( =_Y_= )
+    =====
+   /  o  \    _
+  {       } / )_\_   _
+  |  \_/  |/ /  \_\_/ )
+   \__/  /(_/     \__/
+    (__/ `,
+  ` /\_/\
+   / > < \
+  ( =_Y_= )
+    =====
+   /  o  \    _
+  {       } / )_\_   _
+  |  \_/  |/ /  \_\_/ )
+   \__/  /(_/     \__/
+    (__/ `,
+];
+
+const MAX_HUNGER = 20;
+const MAX_HAPPINESS = 15;
+const HUNGER_DECREASE_INTERVAL = 4000; // ms
+const HAPPINESS_DECREASE_INTERVAL = 5000; // ms
+
+function clamp(val, min, max) {
+  return Math.max(min, Math.min(max, val));
+}
+
 function App() {
+  const [hunger, setHunger] = useState(MAX_HUNGER);
+  const [happiness, setHappiness] = useState(MAX_HAPPINESS);
+  const [input, setInput] = useState('');
+  const [catFrame, setCatFrame] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [message, setMessage] = useState('');
+  const inputRef = useRef(null);
+
+  // Animate cat
+  useEffect(() => {
+    if (gameOver) return;
+    const anim = setInterval(() => {
+      setCatFrame(f => (f + 1) % CAT_FRAMES.length);
+    }, 500);
+    return () => clearInterval(anim);
+  }, [gameOver]);
+
+  // Decrease hunger
+  useEffect(() => {
+    if (gameOver) return;
+    const interval = setInterval(() => {
+      setHunger(h => {
+        if (h <= 1) {
+          setGameOver(true);
+          setMessage('Your cat starved!');
+          return 0;
+        }
+        return h - 1;
+      });
+    }, HUNGER_DECREASE_INTERVAL);
+    return () => clearInterval(interval);
+  }, [gameOver]);
+
+  // Decrease happiness
+  useEffect(() => {
+    if (gameOver) return;
+    const interval = setInterval(() => {
+      setHappiness(h => {
+        if (h <= 1) {
+          setGameOver(true);
+          setMessage('Your cat is too sad!');
+          return 0;
+        }
+        return h - 1;
+      });
+    }, HAPPINESS_DECREASE_INTERVAL);
+    return () => clearInterval(interval);
+  }, [gameOver]);
+
+  // Focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [gameOver]);
+
+  const handleCommand = (e) => {
+    e.preventDefault();
+    if (gameOver) return;
+    const cmd = input.trim().toLowerCase();
+    if (cmd === 'feed') {
+      setHunger(h => clamp(h + 5, 0, MAX_HUNGER));
+      setMessage('You fed your cat.');
+    } else if (cmd === 'pet') {
+      setHappiness(h => clamp(h + 3, 0, MAX_HAPPINESS));
+      setMessage('You pet your cat.');
+    } else if (cmd) {
+      setMessage('Unknown command. Try "feed" or "pet".');
+    }
+    setInput('');
+  };
+
+  const handleRestart = () => {
+    setHunger(MAX_HUNGER);
+    setHappiness(MAX_HAPPINESS);
+    setGameOver(false);
+    setMessage('');
+    setInput('');
+    setCatFrame(0);
+    inputRef.current?.focus();
+  };
+
+  // Render stat bars
+  const renderBar = (label, value, max) => (
+    <div className="stat-row">
+      <span>{label}:</span>
+      <span className="bar">[
+        {'X'.repeat(value).padEnd(max, ' ')}
+      ]</span>
+    </div>
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="terminal-outer">
+      <div className="terminal-window">
+        <div className="terminal-title">DIGI-CAT <span className="close-btn">x</span></div>
+        <div className="terminal-content">
+          <div>
+            {renderBar('Hunger', hunger, MAX_HUNGER)}
+            {renderBar('Happiness', happiness, MAX_HAPPINESS)}
+          </div>
+          <div className="cat-art-wrapper">
+            <pre className="cat-art">{CAT_FRAMES[catFrame]}</pre>
+          </div>
+          {message && <div className="message">{message}</div>}
+          {gameOver ? (
+            <div className="game-over">
+              <div>Game Over</div>
+              <button onClick={handleRestart}>Restart</button>
+            </div>
+          ) : null}
+          <div className="bottom-bar">
+            {!gameOver && (
+              <form className="command-row" onSubmit={handleCommand}>
+                <span>Enter command:</span>
+                <input
+                  ref={inputRef}
+                  className="command-input"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  autoComplete="off"
+                  disabled={gameOver}
+                />
+              </form>
+            )}
+            <div className="commands">Commands: &lt;feed&gt; &lt;pet&gt;</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
