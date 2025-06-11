@@ -4,22 +4,22 @@ import './App.css';
 
 // ASCII art frames for animation
 const CAT_FRAMES = [
-  ` /\_/\
-   / o o \
-  ( =_Y_= )
+   `  /\_/\
+    / o o \
+   ( =_Y_= )
     =====
-   /  o  \    _
-  {       } / )_\_   _
-  |  \_/  |/ /  \_\_/ )
+    /  o  \    _
+   {       } / )_\_   _
+   |  \_/  |/ /  \_\_/ )
    \__/  /(_/     \__/
     (__/ `,
-  ` /\_/\
-   / > < \
-  ( =_Y_= )
+   `  /\_/\
+    / > < \
+   ( =_Y_= )
     =====
    /  o  \    _
-  {       } / )_\_   _
-  |  \_/  |/ /  \_\_/ )
+   {       } / )_\_   _
+   |  \_/  |/ /  \_\_/ )
    \__/  /(_/     \__/
     (__/ `,
 ];
@@ -75,7 +75,7 @@ function App() {
       setHappiness(h => {
         if (h <= 1) {
           setGameOver(true);
-          setMessage('Your cat is too sad!');
+          setMessage('Your cat got too sad. It has died.');
           return 0;
         }
         return h - 1;
