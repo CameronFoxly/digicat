@@ -173,7 +173,7 @@
   text-align: center;
 }
 .game-over {
-  color: #f7d774;
+  color: #ff4d4f; /* bright red */
   background: none;
   font-family: inherit;
   font-size: 1.1rem;
