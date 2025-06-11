@@ -64,8 +64,8 @@ function App() {
           setIsBlinking(false);
           setCatFrame(0); // open-eye frame
           scheduleBlink();
-        }, 500);
-      }, 2000 + Math.random() * 3000);
+        }, 200);
+      }, 1000 + Math.random() * 2000);
     }
 
     setCatFrame(0);
