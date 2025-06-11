@@ -31,8 +31,8 @@ const CAT_FRAMES = [
 const MAX_BAR_LENGTH = 20; // Both bars same length
 const MAX_HUNGER = MAX_BAR_LENGTH;
 const MAX_HAPPINESS = MAX_BAR_LENGTH;
-const HUNGER_DECREASE_INTERVAL = 4000; // ms
-const HAPPINESS_DECREASE_INTERVAL = 3000; // ms (faster than hunger)
+const HUNGER_DECREASE_INTERVAL = 400; // ms
+const HAPPINESS_DECREASE_INTERVAL = 300; // ms (faster than hunger)
 
 function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
@@ -175,12 +175,14 @@ function App() {
           <div className="message" style={{ minHeight: '1.5em', visibility: message ? 'visible' : 'hidden' }}>
             {message || ' '}
           </div>
-          {gameOver ? (
-            <div className="game-over">
-              <div>Game Over</div>
-              <button onClick={handleRestart}>Restart</button>
+          <div style={{ minHeight: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '70px' }}>
+              <div style={{ visibility: gameOver ? 'visible' : 'hidden', height: gameOver ? 'auto' : 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="game-over">Game Over</div>
+                <button style={{ marginTop: 8 }} onClick={handleRestart}>Restart</button>
+              </div>
             </div>
-          ) : null}
+          </div>
           <div className="bottom-bar">
             {!gameOver && (
               <form className="command-row" onSubmit={handleCommand}>
