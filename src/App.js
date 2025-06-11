@@ -180,12 +180,19 @@ function App() {
       setHappiness(h => clamp(h + 3, 0, MAX_HAPPINESS));
       setMessage('You pet your cat.');
     } else if (cmd === 'dance') {
-      setHappiness(MAX_HAPPINESS);
-      setHunger(h => clamp(h - 3, 0, MAX_HUNGER));
-      setIsDancing(true);
-      setMessage('Your cat is dancing!');
+      if (hunger <= 3) {
+        setHunger(0);
+        setGameOver(true);
+        setMessage('Your cat danced itself to death!');
+        setIsDancing(false);
+      } else {
+        setHappiness(MAX_HAPPINESS);
+        setHunger(h => clamp(h - 3, 0, MAX_HUNGER));
+        setIsDancing(true);
+        setMessage('Your cat is dancing!');
+      }
     } else if (cmd) {
-      setMessage('Unknown command. Try "feed", "pet", or "dance".');
+      setMessage('Unknown command. Try again.');
     }
     setInput('');
   };
