@@ -24,10 +24,11 @@ const CAT_FRAMES = [
     (__/ `,
 ];
 
-const MAX_HUNGER = 20;
-const MAX_HAPPINESS = 15;
+const MAX_BAR_LENGTH = 20; // Both bars same length
+const MAX_HUNGER = MAX_BAR_LENGTH;
+const MAX_HAPPINESS = MAX_BAR_LENGTH;
 const HUNGER_DECREASE_INTERVAL = 4000; // ms
-const HAPPINESS_DECREASE_INTERVAL = 5000; // ms
+const HAPPINESS_DECREASE_INTERVAL = 3000; // ms (faster than hunger)
 
 function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
@@ -118,9 +119,18 @@ function App() {
   const renderBar = (label, value, max) => (
     <div className="stat-row">
       <span>{label}:</span>
-      <span className="bar">[
-        {'X'.repeat(value).padEnd(max, ' ')}
-      ]</span>
+      <span
+        className="bar"
+        style={{
+          fontFamily: 'inherit',
+          letterSpacing: '0',
+          display: 'inline-block',
+          width: `${max + 2}ch`, // +2 for brackets
+          textAlign: 'left',
+        }}
+      >
+        {'[' + 'X'.repeat(value) + '\u00A0'.repeat(max - value) + ']'}
+      </span>
     </div>
   );
 
@@ -136,7 +146,9 @@ function App() {
           <div className="cat-art-wrapper">
             <pre className="cat-art">{CAT_FRAMES[catFrame]}</pre>
           </div>
-          {message && <div className="message">{message}</div>}
+          <div className="message" style={{ minHeight: '1.5em', visibility: message ? 'visible' : 'hidden' }}>
+            {message || ' '}
+          </div>
           {gameOver ? (
             <div className="game-over">
               <div>Game Over</div>
